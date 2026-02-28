@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcolatore Vantaggi Fiscali NLT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        .glass-panel { background: white; border-radius: 1rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+    </style>
+</head>
+<body class="p-6 md:p-12">
+
+    <div class="max-w-4xl mx-auto glass-panel p-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">Simulatore Vantaggi Fiscali NLT</h1>
+        <p class="text-gray-500 mb-8">Scopri il reale costo di possesso (TCO) e i vantaggi per la tua azienda.</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+                <h2 class="text-xl font-semibold text-blue-600 mb-4">1. I tuoi Dati</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Nome e Cognome</label>
+                        <input type="text" id="leadName" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border" placeholder="Mario Rossi">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Email</label>
+                        <input type="email" id="leadEmail" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border" placeholder="mario@azienda.it">
+                    </div>
+                    
+                    <h2 class="text-xl font-semibold text-blue-600 mb-4 mt-8">2. Dati Noleggio</h2>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Categoria Fiscale</label>
+                        <select id="categoria" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border">
+                            <option value="agente">Agente di Commercio / Rappresentante</option>
+                            <option value="professionista">Libero Professionista (Indiv.)</option>
+                            <option value="azienda_strumentale">Azienda (Uso Esclusivo/Strumentale)</option>
+                            <option value="azienda_promiscuo">Azienda (Uso Promiscuo Dipendenti)</option>
+                            <option value="azienda_non_strumentale">Azienda (Uso Non Strumentale)</option>
+                        </select>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="w-1/2">
+                            <label class="block text-sm font-medium text-gray-700">Quota Noleggio Mensile (€)</label>
+                            <input type="number" id="quotaNoleggio" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border" value="300">
+                        </div>
+                        <div class="w-1/2">
+                            <label class="block text-sm font-medium text-gray-700">Quota Servizi Mensile (€)</label>
+                            <input type="number" id="quotaServizi" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border" value="150">
+                        </div>
+                    </div>
+                    <button onclick="calcolaTCO()" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded hover:bg-blue-700 transition mt-6">
+                        Calcola Risparmio Fiscale
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                <h2 class="text-xl font-semibold text-gray-800 mb-6">Risultato Simulazione</h2>
+                
+                <div class="space-y-6">
+                    <div>
+                        <p class="text-sm text-gray-500">Costo Totale Annuo (Senza agevolazioni)</p>
+                        <p class="text-2xl font-bold text-gray-800" id="resTotale">€ 0.00</p>
+                    </div>
+
+                    <div class="border-t border-gray-200 pt-4">
+                        <p class="text-sm text-gray-500">IVA Annuale Detraibile</p>
+                        <p class="text-xl font-bold text-green-600" id="resIva">€ 0.00</p>
+                    </div>
+
+                    <div class="border-t border-gray-200 pt-4">
+                        <p class="text-sm text-gray-500">Costi Annuali Deducibili (Imponibile)</p>
+                        <p class="text-xl font-bold text-blue-600" id="resDeducibile">€ 0.00</p>
+                        <p class="text-xs text-gray-400 mt-1">Calcolato sui limiti fiscali massimi previsti dalla normativa.</p>
+                    </div>
+                    
+                    <div class="bg-blue-100 p-4 rounded-md mt-6">
+                        <p class="text-sm font-semibold text-blue-800 text-center">Consulenza NLT</p>
+                        <p class="text-xs text-blue-600 text-center mt-1">Ottimizzando queste deduzioni, il Costo Reale (TCO) del veicolo si abbatte drasticamente rispetto all'acquisto. Contattaci per un preventivo personalizzato.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calcolaTCO() {
+            const cat = document.getElementById('categoria').value;
+            const qNoleggio = parseFloat(document.getElementById('quotaNoleggio').value) || 0;
+            const qServizi = parseFloat(document.getElementById('quotaServizi').value) || 0;
+
+            const annuoNoleggio = qNoleggio * 12;
+            const annuoServizi = qServizi * 12;
+            const costoTotaleAnnuo = annuoNoleggio + annuoServizi;
+            const ivaTotaleAnnua = costoTotaleAnnuo * 0.22;
+
+            let deducibileNoleggio = 0;
+            let deducibileServizi = 0;
+            let percIva = 0;
+
+            if (cat === 'agente') {
+                deducibileNoleggio = Math.min(annuoNoleggio, 5164.57) * 0.80;
+                deducibileServizi = annuoServizi * 0.80;
+                percIva = 1.0;
+            } else if (cat === 'professionista') {
+                deducibileNoleggio = Math.min(annuoNoleggio, 3615.20) * 0.20;
+                deducibileServizi = annuoServizi * 0.20;
+                percIva = 0.40;
+            } else if (cat === 'azienda_strumentale') {
+                deducibileNoleggio = annuoNoleggio * 1.0;
+                deducibileServizi = annuoServizi * 1.0;
+                percIva = 1.0;
+            } else if (cat === 'azienda_promiscuo') {
+                deducibileNoleggio = annuoNoleggio * 0.70;
+                deducibileServizi = annuoServizi * 0.70;
+                percIva = 0.40;
+            } else if (cat === 'azienda_non_strumentale') {
+                deducibileNoleggio = Math.min(annuoNoleggio, 3615.20) * 0.20;
+                deducibileServizi = annuoServizi * 0.20;
+                percIva = 0.40;
+            }
+
+            const totaleDeducibile = deducibileNoleggio + deducibileServizi;
+            const ivaDetraibile = ivaTotaleAnnua * percIva;
+
+            document.getElementById('resTotale').innerText = '€ ' + costoTotaleAnnuo.toFixed(2);
+            document.getElementById('resIva').innerText = '€ ' + ivaDetraibile.toFixed(2);
+            document.getElementById('resDeducibile').innerText = '€ ' + totaleDeducibile.toFixed(2);
+        }
+    </script>
+</body>
+</html>
