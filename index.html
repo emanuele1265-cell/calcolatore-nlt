@@ -16,11 +16,12 @@
         <h1 class="text-3xl font-bold text-gray-800 mb-2">Simulatore Vantaggi Fiscali NLT</h1>
         <p class="text-gray-500 mb-8">Scopri il reale costo di possesso (TCO) e i vantaggi per la tua azienda.</p>
 
-        <form action="https://formsubmit.co/emanuele.coniglione@lafenicesrl.biz" method="POST">
+        <form action="https://formsubmit.co/INSERISCI_QUI_LA_TUA_EMAIL" method="POST">
             
             <input type="hidden" name="_subject" value="Nuovo Lead dal Simulatore NLT!">
             <input type="hidden" name="_captcha" value="false">
-            <input type="hidden" name="_next" value="https://emanuele1265-cell.github.io/calcolatore-nlt/">
+            <input type="hidden" name="_next" value="https://emanuele1265-cell.github.io/calcolatore-nlt/grazie.html">
+            
             <input type="hidden" name="Costo_Totale_Annuo" id="hiddenTotale">
             <input type="hidden" name="IVA_Detraibile" id="hiddenIva">
             <input type="hidden" name="Costi_Deducibili" id="hiddenDeducibile">
@@ -136,12 +137,10 @@
             const totaleDeducibile = deducibileNoleggio + deducibileServizi;
             const ivaDetraibile = ivaTotaleAnnua * percIva;
 
-            // Aggiorna la parte visiva per il cliente
             document.getElementById('resTotale').innerText = '€ ' + costoTotaleAnnuo.toFixed(2);
             document.getElementById('resIva').innerText = '€ ' + ivaDetraibile.toFixed(2);
             document.getElementById('resDeducibile').innerText = '€ ' + totaleDeducibile.toFixed(2);
 
-            // Aggiorna i campi nascosti per l'email che riceverai tu
             document.getElementById('hiddenTotale').value = '€ ' + costoTotaleAnnuo.toFixed(2);
             document.getElementById('hiddenIva').value = '€ ' + ivaDetraibile.toFixed(2);
             document.getElementById('hiddenDeducibile').value = '€ ' + totaleDeducibile.toFixed(2);
